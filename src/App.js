@@ -15,8 +15,12 @@ const App = () => {
 
   const [charge, setCharge] = useState("");
   const [amount, setAmount] = useState(0);
+  const [id, setId] = useState('');
 
+  const [edit, setEdit] = useState(false);
+  
   const [alert, setAlert] = useState( { show:false } );
+  
 
   /*
     { type: "danger", text: "아이템이 삭제되었습니다." }
@@ -26,10 +30,34 @@ const App = () => {
   const handleCharge = (e) => {
     setCharge(e.target.value);
   }
-
+  
   const handleAmount = (e) => {
     setAmount(e.target.valueAsNumber);
   }
+  /*
+  const handleEdit = (pickedItem) => {
+    console.log(pickedItem);
+    // 인덱스로 찾으면 편할 것 같은데 이유가 있을까?
+    // 이 아이템의 참조는 현재 ExpenseItem 에서 지정되었다.
+    
+    // 수정버튼을 누르면 내가 누른 아이템의 이름과 값이 ExpenseForm 에 표시되어서 수정이 가능해야 한다.
+    setCharge(pickedItem.charge);
+    setAmount(pickedItem.amount);
+  }
+  */
+
+
+  const handleEdit = id => {
+    const expense = expenses.find(item => item.id === id);
+    const {charge, amount} = expense;
+    setCharge(charge);
+    setAmount(amount);
+    setEdit(true);
+    setId(id);
+  }
+
+
+  
 
   const handleDelete = (id) => {
     const newExpense = expenses.filter(expense => expense.id !== id)
@@ -40,13 +68,25 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (charge !== "" && amount > 0) {
-      const newExpense = { id: crypto.randomUUID(), charge, amount };
-      // expenses.push(newExpense); => 불변성 지키지 X
-      const newExpenses = [...expenses, newExpense]; //=> 불변성 지키는 0
-      setExpenses (newExpenses);
-      setCharge("");
-      setAmount(0);
-      handleAlert({ type: "success", text: "아이템이 생성되었습니다." });
+      if(edit){
+        const newExpenses = expenses.map(item => {
+          return item.id === id? {...item, charge, amount } : item;
+        })
+
+        console.log(expenses)
+        console.log(newExpenses);
+        setExpenses(newExpenses);
+        setEdit(false);
+        handleAlert( {type: "success", text: "아이템이 수정되었습니다."} );
+      }else{
+        const newExpense = { id: crypto.randomUUID(), charge, amount };
+        // expenses.push(newExpense); => 불변성 지키지 X
+        const newExpenses = [...expenses, newExpense]; //=> 불변성 지키는 0
+        setExpenses(newExpenses);
+        setCharge("");
+        setAmount(0);
+        handleAlert({ type: "success", text: "아이템이 생성되었습니다." });
+      }
     } else {
       handleAlert({ type: "danger", text: "charge는 빈 값일 수 없으며 amount 값은 0 보다 커야 합니다." });
     }
@@ -68,12 +108,12 @@ const App = () => {
 
         <div style={ {width: '100%', backgroundColor: 'white', padding: '1rem' }}>
           { /* Expense Form */}
-          <ExpenseForm charge={charge} handleSubmit={handleSubmit} handleCharge={handleCharge} amount={amount} handleAmount={handleAmount} />
+          <ExpenseForm charge={charge} handleSubmit={handleSubmit} handleCharge={handleCharge} amount={amount} handleAmount={handleAmount} edit={edit} />
         </div>
 
         <div style={ {width: '100%', backgroundColor: 'white', padding: '1rem' }}>
           { /* Expense List */}
-          <ExpenseList initialExpenses={expenses} handleDelete={handleDelete} />
+          <ExpenseList initialExpenses={expenses} handleEdit={handleEdit} handleDelete={handleDelete} />
         </div>
 
         <div style={{ display:'flex', justifyContent: 'start', marginTop: '1rem' }}>

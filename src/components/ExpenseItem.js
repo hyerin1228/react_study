@@ -10,8 +10,10 @@ const ExpenseItem = (props) => {
                 <span className='expense'>{props.expense.charge}</span>
                 <span className='amount'>{props.expense.amount}</span>
             </div>
-            <div>
-                <button onClick={ () => props.handleDelete(props.expense.id) } className='edit-btn'>
+            <div
+            >
+                {/* <button onClick={ () => props.handleEdit(props.expense) } className='edit-btn'> */}
+                <button onClick={ () => props.handleEdit(props.expense.id) } className='edit-btn'>
                     <MdEdit />
                 </button>
                 <button onClick={ () => props.handleDelete(props.expense.id) } className='clear-btn'>
