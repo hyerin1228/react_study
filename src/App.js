@@ -7,11 +7,12 @@ import Alert from './components/Alert'
 
 const App = () => {
 
-  const [expenses, setExpenses] = useState([
-    { id: 1, charge: '콜라', amount: 2000},
-    { id: 2, charge: '빵', amount: 1000},
-    { id: 3, charge: '맥북', amount: 3000},
-  ]);
+  const initialExpenses = (localStorage.getItem("expenses") !== null) ? 
+        JSON.parse(localStorage.getItem("expenses")) : [{ id: 1, charge: '콜라', amount: 2000},{ id: 2, charge: '빵', amount: 1000},{ id: 3, charge: '맥북', amount: 3000}];
+
+  const [expenses, setExpenses] = useState(initialExpenses);
+
+  // console.log(expenses)
 
   const [charge, setCharge] = useState("");
   const [amount, setAmount] = useState(0);
@@ -62,8 +63,14 @@ const App = () => {
   const handleDelete = (id) => {
     const newExpense = expenses.filter(expense => expense.id !== id)
     setExpenses(newExpense)
+    localStorage.setItem("expenses", JSON.stringify(newExpense));
     handleAlert({ type: "danger", text: "아이템이 삭제되었습니다." });
   }
+
+  const clearItems = () => {
+    setExpenses([]);
+    localStorage.clear();
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,6 +83,7 @@ const App = () => {
         console.log(expenses)
         console.log(newExpenses);
         setExpenses(newExpenses);
+        localStorage.setItem("expenses", JSON.stringify(newExpenses)); // 로컬스토리지
         setEdit(false);
         handleAlert( {type: "success", text: "아이템이 수정되었습니다."} );
       }else{
@@ -83,6 +91,9 @@ const App = () => {
         // expenses.push(newExpense); => 불변성 지키지 X
         const newExpenses = [...expenses, newExpense]; //=> 불변성 지키는 0
         setExpenses(newExpenses);
+
+        localStorage.setItem("expenses", JSON.stringify(newExpenses)); // 로컬스토리지
+        
         setCharge("");
         setAmount(0);
         handleAlert({ type: "success", text: "아이템이 생성되었습니다." });
@@ -113,7 +124,7 @@ const App = () => {
 
         <div style={ {width: '100%', backgroundColor: 'white', padding: '1rem' }}>
           { /* Expense List */}
-          <ExpenseList initialExpenses={expenses} handleEdit={handleEdit} handleDelete={handleDelete} />
+          <ExpenseList expenses={expenses} clearItems={clearItems} initialExpenses={expenses} handleEdit={handleEdit} handleDelete={handleDelete} />
         </div>
 
         <div style={{ display:'flex', justifyContent: 'start', marginTop: '1rem' }}>
