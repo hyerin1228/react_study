@@ -63,7 +63,7 @@ const ExpenseList = ({ expenses, setExpenses, initialExpenses, handleDelete, han
                 return(
                   <Draggable key={expense.id} draggableId={expense.id} index={index}>
                     {(provided, snapshot) => (
-                      <li
+                      <div
                         ref={provided.innerRef}
                         style={getItemStyle(
                           provided.draggableStyle,
@@ -71,18 +71,20 @@ const ExpenseList = ({ expenses, setExpenses, initialExpenses, handleDelete, han
                         )}
                         {...provided.draggableProps} 
                         {...provided.dragHandleProps}
-                        >
+                      >
+                        {provided.placeholder}
                         <ExpenseItem
                           key={expense.id} expense={expense} 
                           handleDelete = {handleDelete}
                           handleEdit = {handleEdit}
                         />
-                      </li>
+                      </div>
                     )}
                   </Draggable>
                 )
               })}
             </ul>
+            {provided.placeholder}
           </div>
         )}
       </Droppable>
