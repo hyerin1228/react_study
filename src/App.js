@@ -5,10 +5,12 @@ import ExpenseList from './components/ExpenseList';
 import Alert from './components/Alert'
 
 
+
+
 const App = () => {
 
   const initialExpenses = (localStorage.getItem("expenses") !== null) ? 
-        JSON.parse(localStorage.getItem("expenses")) : [{ id: 1, charge: '콜라', amount: 2000},{ id: 2, charge: '빵', amount: 1000},{ id: 3, charge: '맥북', amount: 3000}];
+        JSON.parse(localStorage.getItem("expenses")) : [{ id: "1", charge: '콜라', amount: 2000},{ id: "2", charge: '빵', amount: 1000},{ id: "3", charge: '맥북', amount: 3000}];
 
   const [expenses, setExpenses] = useState(initialExpenses);
 
@@ -124,7 +126,7 @@ const App = () => {
 
         <div style={ {width: '100%', backgroundColor: 'white', padding: '1rem' }}>
           { /* Expense List */}
-          <ExpenseList expenses={expenses} clearItems={clearItems} initialExpenses={expenses} handleEdit={handleEdit} handleDelete={handleDelete} />
+          <ExpenseList expenses={expenses} setExpenses={setExpenses} clearItems={clearItems} initialExpenses={expenses} handleEdit={handleEdit} handleDelete={handleDelete} />
         </div>
 
         <div style={{ display:'flex', justifyContent: 'start', marginTop: '1rem' }}>
