@@ -16,17 +16,17 @@ const ExpenseList = ({ expenses, setExpenses, initialExpenses, handleDelete, han
 
   const grid = 8;
   const getItemStyle = (draggableStyle, isDragging) => ({
-    userSelect: 'none',
-    padding: grid * 2,
-    marginBottom: grid,
-    background: isDragging ? 'lightgreen' : 'grey',
-    ...draggableStyle
+    background: isDragging ? 'transparent' : 'transparent',
+    ...draggableStyle,
+    // userSelect: 'none',
+    // padding: grid * 2,
+    // marginBottom: grid,
   });
 
   const getListStyle = (isDraggingOver) => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    padding: grid,
-    width: 250
+    background: isDraggingOver ? 'transparent' : 'transparent',
+    //padding: grid,
+    //width: 250
   });
 
   const onDragEnd = (result) => {
